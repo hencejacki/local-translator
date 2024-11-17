@@ -1,0 +1,28 @@
+name: local-translator-ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: package into a zip file
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: check out
+        uses: actions/checkout@v3
+
+      - name: Create ZIP file
+        run: |
+          zip -r source-code.zip . -x '*.git*'
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Source-code
+          path: Source-code.zip
