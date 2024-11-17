@@ -107,6 +107,10 @@ const English2Chinese = async (text, tabId) => {
     text = text.trim();
     // console.log("Text would be translated: " + text);
     try {
+        // Check if database is opened
+        if (!indexDb.isOpened()) {
+            await indexDb.Init();
+        }
         const translatedText = await indexDb.Search(text);
         // Reject if word not found
         if (!translatedText) {
@@ -132,9 +136,6 @@ chrome.runtime.onSuspend.addListener(() => {
 });
 
 chrome.runtime.onStartup.addListener(async () => {
+    // Fired when window is reopened
     console.log("onStartup");
-});
-
-chrome.runtime.onRestartRequired.addListener(async (reason) => {
-    console.log("onRestartRequired");
 });
