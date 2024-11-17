@@ -1,2 +1,4 @@
 *.drawio.png
 pages/*
+.git/*
+.github/*
