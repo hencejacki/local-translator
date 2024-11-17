@@ -10,19 +10,28 @@ on:
 
 jobs:
   build:
-    name: package into a zip file
+    name: Package source code into a ZIP file
     runs-on: ubuntu-22.04
 
     steps:
-      - name: check out
-        uses: actions/checkout@v3
+      # Step 1: Check out repository
+      - name: Check out source code
+        uses: actions/checkout@v4
 
+      # Step 2: Clean existing ZIP files to prevent nesting issues
+      - name: Clean up old ZIP files
+        run: rm -f source-code.zip
+
+      # Step 3: Create a ZIP file excluding .git and workflow files
       - name: Create ZIP file
         run: |
-          zip -r source-code.zip . -x '*.git*'
+          zip -r source-code.zip . \
+            -x '*.git*' \
+            -x '*.github/*'
 
+      # Step 4: Upload ZIP file as an artifact
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: source-code
           path: source-code.zip
