@@ -16,7 +16,7 @@ Translate English to Chinese.
 
 ## Usage
 
-Download the zip file and then import to your chrome browser.
+Download the zip file and then unpack it, then drag to your chrome browser.
 
 ~~Select features you wanna display on the popup window.~~
 
