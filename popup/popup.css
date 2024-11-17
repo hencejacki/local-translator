@@ -1,0 +1,9 @@
+body {
+    width: auto;
+}
+
+ol,
+ul {
+    padding: 0;
+    margin: 0 auto;
+}
