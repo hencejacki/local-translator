@@ -3,6 +3,7 @@
     "name": "Local Translation",
     "description": "Translate english words to local language",
     "version": "1.0",
+    "minimum_chrome_version": "109",
     "icons": {
         "16": "images/icon-16.png",
         "32": "images/icon-32.png",
