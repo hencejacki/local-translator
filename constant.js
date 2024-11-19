@@ -76,18 +76,6 @@ const DictOffScreenDocPath = "offscreen/offscreen.html";
 
 // IndexDB constants
 const DBChunkSize = 50000;
-/**
- * export2Database with DBChunkSize: 10000: 84434.31909179688 ms
- * export2Database with DBChunkSize: 20000: 97092.59814453125 ms
- * export2Database with DBChunkSize: 30000: 86558.19409179688 ms
- * export2Database with DBChunkSize: 30000: 83573.93701171875 ms
- * export2Database with DBChunkSize: 40000: 86095.26391601562 ms
- * export2Database with DBChunkSize: 40000: 94634.39184570312 ms
- * export2Database with DBChunkSize: 40000: 85123.88012695312 ms
- * export2Database with DBChunkSize: 50000: 84594.60498046875 ms
- * export2Database with DBChunkSize: 50000: 86733.40112304688 ms
- * export2Database with DBChunkSize: 50000: 94931.90307617188 ms
- */
 
 // Word constants
 const WordOPType = {
@@ -96,7 +84,7 @@ const WordOPType = {
     WORD_NOT_FOUND: 'word_not_found',
 };
 
-const isDebugMode = true;
+const isDebugMode = false;
 
 export {
     checkItems,
