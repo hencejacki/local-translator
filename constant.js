@@ -96,6 +96,8 @@ const WordOPType = {
     WORD_NOT_FOUND: 'word_not_found',
 };
 
+const isDebugMode = true;
+
 export {
     checkItems,
     LoadType,
@@ -110,4 +112,5 @@ export {
     DictOffScreenDocPath,
     DBChunkSize,
     WordOPType,
+    isDebugMode,
 };

@@ -1,4 +1,4 @@
-import { DictOPType, DictDefaultData, DictOffScreenDocPath, WordOPType } from "./constant.js";
+import { DictOPType, DictDefaultData, DictOffScreenDocPath, WordOPType, isDebugMode } from "./constant.js";
 import { IndexDBHelper } from "./indexedb.js";
 
 let indexDb = new IndexDBHelper();
@@ -27,18 +27,19 @@ const exportData2Database = async (csvObjects) => {
         await indexDb.Init();
     }
 
-    console.log(`Inserting data: ${csvObjects.length}`);
+    if (isDebugMode) {
+        console.log(`Inserting data: ${csvObjects.length}`);
+    }
 
     // Insert data
     if (!(await indexDb.Insert(csvObjects))) {
-        console.log("Insert data failed.");
+        if (isDebugMode) {
+            console.log("Insert data failed.");
+        }
         return false;
     }
 
-    console.log(`Inserted data: ${csvObjects.length}`);
-
     // Request next chunk
-    // console.log(`2. [background.js]: ${DictOPType.EXPORT_CSV_NEXT}`)
     send2Offscreen(DictOPType.EXPORT_CSV_NEXT, DictDefaultData);
 
     return true;
@@ -49,24 +50,27 @@ const handleMessages = async (message, sender) => {
 
     switch (message.type) {
         case DictOPType.EXPORT_CSV_NEXT:
-            // console.log(`2. [offscreen.js]: ${DictOPType.EXPORT_CSV_NEXT}`)
             exportData2Database(message.data);
             break;
         case DictOPType.EXPORT_CSV_FINISHED:
             let { inserted, total } = message.data;
             if (inserted != total) {
-                console.warn(`Insert data incomplete, inserted: ${inserted}, total: ${total}`);
+                if (isDebugMode) {
+                    console.warn(`Insert data incomplete, inserted: ${inserted}, total: ${total}`);
+                }
             }
-            // console.log(`3. [offscreen.js]: ${DictOPType.EXPORT_CSV_FINISHED}`)
-            console.log("Export data finished.");
+
+            if (isDebugMode) {
+                console.log("Export data finished.");
+            }
             break;
         case WordOPType.WORD_SELECTED:
-            console.log("sender: ", sender);
-            console.log('Text selected: ', message.data);
             English2Chinese(message.data, sender.tab.id);
             break;
         default:
-            console.warn(`Unexpected message type received: '${message.type}'.`);
+            if (isDebugMode) {
+                console.warn(`Unexpected message type received: '${message.type}'.`);
+            }
             return false;
     }
 
@@ -74,13 +78,11 @@ const handleMessages = async (message, sender) => {
 }
 
 const send2Offscreen = async (type, data) => {
-    console.log('Send to offscreen');
     await createDocIfNotExist();
     chrome.runtime.sendMessage({ target: 'offscreen', type, data });
 }
 
 const send2Content = (type, data, id) => {
-    console.log('Send to content: ', type, data, id);
     chrome.tabs.sendMessage(id, { target: 'content', type, data });
 }
 
@@ -114,7 +116,9 @@ const English2Chinese = async (text, tabId) => {
         const translatedText = await indexDb.Search(text);
         // Reject if word not found
         if (!translatedText) {
-            console.log("Word not found in database: " + text);
+            if (isDebugMode) {
+                console.log("Word not found in database: " + text);
+            }
             return;
         }
         send2Content(WordOPType.WORD_TRANSLATED, translatedText, tabId);
@@ -131,11 +135,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 chrome.runtime.onMessage.addListener(handleMessages);
 
 chrome.runtime.onSuspend.addListener(() => {
-    console.log("Extension is being unloaded.");
     closeOffscreenDocument();
 });
 
 chrome.runtime.onStartup.addListener(async () => {
     // Fired when window is reopened
-    console.log("onStartup");
 });

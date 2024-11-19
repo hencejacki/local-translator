@@ -1,4 +1,4 @@
-import { DictFilePath, DictOPType, DBChunkSize, DictFailedData, WordOPType } from "../constant.js";
+import { DictFilePath, DictOPType, DBChunkSize, DictFailedData, WordOPType, isDebugMode } from "../constant.js";
 import "../third-party/jquery/jquery-3.7.1.min.js"
 import "../third-party/jquery/jquery.csv.js";
 
@@ -42,7 +42,9 @@ const handleMessages = async (message) => {
             English2Chinese(message.data);
             break;
         default:
-            console.warn(`Unexpected message type received: '${message.type}'.`);
+            if (isDebugMode) {
+                console.warn(`Unexpected message type received: '${message.type}'.`);
+            }
             return false;
     }
 
@@ -63,7 +65,9 @@ const parseExcel2Object = async () => {
     remain = csvLength % DBChunkSize;
 
     // Calculate time consumed
-    console.time("export2Database with DBChunkSize: " + DBChunkSize);
+    if (isDebugMode) {
+        console.time("export2Database with DBChunkSize: " + DBChunkSize);
+    }
     let firstChunk = cnt-- > 0 ? csvData.slice(0, DBChunkSize) : csvData;
 
     insertCnt += firstChunk.length;
@@ -85,7 +89,9 @@ const parseExcel2NextObject = () => {
         send2BackGround(DictOPType.EXPORT_CSV_NEXT, remainChunk);
     }
     else {
-        console.timeEnd("export2Database with DBChunkSize: " + DBChunkSize);
+        if (isDebugMode) {
+            console.timeEnd("export2Database with DBChunkSize: " + DBChunkSize);
+        }
         send2BackGround(DictOPType.EXPORT_CSV_FINISHED, {
             inserted: insertCnt,
             total: csvLength

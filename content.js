@@ -1,5 +1,7 @@
 // content.js
 
+let isDebugMode = true;
+
 const WordOPType = {
     WORD_SELECTED: 'word_selected',
     WORD_TRANSLATED: 'word_translated',
@@ -22,14 +24,20 @@ const handleMessages = async (message) => {
 
     switch (message.type) {
         case WordOPType.WORD_TRANSLATED:
-            console.log('Text translated: ', message.data);
+            if (isDebugMode) {
+                console.log('Word translated: ', message.data);
+            }
             translateComplete(message.data);
             break;
         case WordOPType.WORD_NOT_FOUND:
-            console.log('Word not found: ', message.data);
+            if (isDebugMode) {
+                console.log('Word not found: ', message.data);
+            }
             break;
         default:
-            console.warn(`Unexpected message type received: '${message.type}'.`);
+            if (isDebugMode) {
+                console.warn(`Unexpected message type received: '${message.type}'.`);
+            }
             return false;
     }
 
