@@ -82,6 +82,13 @@ const translateComplete = (text) => {
         selectionRect = document.getSelection().getRangeAt(0).getBoundingClientRect();
     }
 
+    // Split definition and translation into multiple lines
+    const definitionLines = text.definition.split('\\n');
+    const translationLines = text.translation.split('\\n');
+    text.definition = definitionLines.join('<br>');
+    text.translation = translationLines.join('<br>');
+    console.log(definitionLines, translationLines);
+
     // Create floating container
     if (!floatingContainer) {
         floatingContainer = document.createElement('div');
